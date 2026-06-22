@@ -1,0 +1,15 @@
+
+@import "tailwindcss";
+
+@theme {
+  /* Documentation Color Palette */
+  --color-navyBlue: #0A1A3A;   /* Headers, navbar, footer */
+  --color-gold: #C9A03D;       /* Luxury accents, CTAs, ratings */
+  --color-white: #FFFFFF;      /* Primary text, backgrounds */
+  --color-lightBlue: #E8F0FE;  /* Section backgrounds */
+  --color-darkGray: #333333;   /* Secondary text */
+
+--font-serif: "Playfair Display", serif;
+  --font-sans: "Inter", sans-serif;
+  --font-cursive: "Monsieur La Doulaise", cursive;
+}
