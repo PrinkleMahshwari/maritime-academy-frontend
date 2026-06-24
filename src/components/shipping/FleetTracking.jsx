@@ -1,14 +1,13 @@
-const ShipHandling = () => {
+const FleetTracking = () => {
   return (
     <div className="bg-white rounded-xl shadow-md p-6">
       <h2 className="text-2xl font-bold mb-4">
-        Ship Handling
+        Fleet Tracking
       </h2>
 
       <p className="text-gray-600">
-        Professional ship handling services including
-        vessel operations, docking assistance and
-        maritime navigation support.
+        Monitor fleet activities, vessel locations
+        and shipping routes with real-time updates.
       </p>
 
       <div className="mt-6">
@@ -20,4 +19,4 @@ const ShipHandling = () => {
   );
 };
 
-export default ShipHandling;
+export default FleetTracking;
