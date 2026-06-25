@@ -1,55 +1,76 @@
-import axios from 'axios';
+import axios from "axios";
 
-// Base URL set karein (apne backend portal ke mutabiq)
+// 🌐 Live Backend URL setting using Environment Variables
 const api = axios.create({
-  baseURL: 'http://localhost:8000/api', // 👈 Apne backend ka URL lagayein
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  timeout: 20000,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
-// 🔒 Request Interceptor: Har request se pehle token add karega
+// 🔒 Request Interceptor: Auto Attach Access Token before every request
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem("token");
+
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`; // 👈 Har request ke sath JWT jayega
+      config.headers.Authorization = `Bearer ${token}`;
     }
+
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// 🔄 Response Interceptor: Agar token expire ho jaye toh handle karega
+// 🔄 Response Interceptor: Handles 401 Unauthorized errors and Token Refreshing
 api.interceptors.response.use(
   (response) => response,
+
   async (error) => {
     const originalRequest = error.config;
 
-    // Agar 401 (Unauthorized) error aaye aur pehle retry na kiya ho
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (
+      error.response?.status === 401 &&
+      originalRequest &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
-      
-      try {
-        const refreshToken = localStorage.getItem('refresh_token');
-        // Backend par naya token mangne ki request
-        const res = await axios.post('http://localhost:8000/api/auth/refresh', {
-          refresh_token: refreshToken,
-        });
 
-        if (res.status === 200) {
-          localStorage.setItem('access_token', res.data.access_token);
-          api.defaults.headers.common['Authorization'] = `Bearer ${res.data.access_token}`;
-          return api(originalRequest); // Purani request ko naye token ke sath dobara chalao
+      try {
+        const refreshToken = localStorage.getItem("refresh_token");
+
+        if (!refreshToken) {
+          localStorage.clear();
+          window.location.href = "/login";
+          return Promise.reject(error);
         }
+
+        // Requesting a new access token from backend
+        const response = await axios.post(
+          `${import.meta.env.VITE_API_BASE_URL}/auth/refresh`,
+          {
+            refresh_token: refreshToken,
+          }
+        );
+
+        const { access_token, refresh_token } = response.data;
+
+        // Updating new tokens inside localStorage
+        localStorage.setItem("token", access_token);
+        localStorage.setItem("refresh_token", refresh_token);
+
+        originalRequest.headers.Authorization = `Bearer ${access_token}`;
+
+        return api(originalRequest); // Retrying the original failed request
       } catch (refreshError) {
-        // Agar refresh token bhi expire ho gaya toh user ko logout kardo
         localStorage.clear();
-        window.location.href = '/login';
+        window.location.href = "/login";
+
+        return Promise.reject(refreshError);
       }
     }
+
     return Promise.reject(error);
   }
 );
