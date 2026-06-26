@@ -54,7 +54,7 @@ const Footer = () => {
         fontFamily: "'Arial', sans-serif",
       }}
     >
-      <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "0 64px", position: "relative" }}>
+      <div style={{ width: "100%", margin: "0 auto", padding: "0 64px", position: "relative" }}>
 
         {/* Yacht Image — local reference updated here */}
         <div
