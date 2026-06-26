@@ -1,14 +1,14 @@
-const ShipHandling = () => {
+const CargoManagement = () => {
   return (
     <div className="bg-white rounded-xl shadow-md p-6">
       <h2 className="text-2xl font-bold mb-4">
-        Ship Handling
+        Cargo Management
       </h2>
 
       <p className="text-gray-600">
-        Professional ship handling services including
-        vessel operations, docking assistance and
-        maritime navigation support.
+        Efficient cargo planning, tracking,
+        documentation and logistics management
+        for international maritime transportation.
       </p>
 
       <div className="mt-6">
@@ -20,4 +20,4 @@ const ShipHandling = () => {
   );
 };
 
-export default ShipHandling;
+export default CargoManagement;

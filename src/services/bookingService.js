@@ -51,8 +51,13 @@ export const bookingService = {
     return response.data;
   },
 
-  verifyPayment: async (paymentIntentId) => {
-    const response = await api.get(`/payments/verify/${paymentIntentId}`);
+  cancelBooking: async (
+    bookingId
+  ) => {
+    const response = await api.delete(
+      `/bookings/${bookingId}/cancel`
+    );
+
     return response.data;
   },
 
@@ -80,5 +85,5 @@ export const bookingService = {
   bookShippingService: async (serviceId) => {
     const response = await api.post(`/shipping/${serviceId}/book`);
     return response.data;
-  }
+  },
 };

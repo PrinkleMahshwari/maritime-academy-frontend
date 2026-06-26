@@ -14,7 +14,10 @@ export const courseService = {
   },
 
   getCurriculum: async (courseId) => {
-    const response = await api.get(`/courses/${courseId}/curriculum`);
+    const response = await api.get(
+      `/courses/${courseId}/curriculum`
+    );
+
     return response.data;
   },
 
