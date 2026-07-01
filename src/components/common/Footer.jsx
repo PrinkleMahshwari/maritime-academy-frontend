@@ -1,9 +1,38 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import footerbg from '../../assets/footer.png'; 
 
 const Footer = () => {
+  const [scrolled, setScrolled] = useState(false);
+  const [hoveredLink, setHoveredLink] = useState(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 0);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const navLinks = ["HOME", "TRANING", "TRIP", "LOCATION", "CONTACT US"];
   const footerLinks = ["PRIVACY POLICY", "TERM AND CONDITION", "FAQS", "ABOUT"];
+
+  const handleFooterLinkClick = (e, link) => {
+    e.preventDefault();
+
+    if (link === "HOME") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    if (link === "LOCATION") {
+      const target = document.getElementById("locations-section");
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  };
 
   const socialIcons = [
     {
@@ -132,38 +161,44 @@ const Footer = () => {
               transform: "translateX(-50%)",
             }}
           >
-            {navLinks.map((link) => (
-              <a
-                key={link}
-                href="#"
-                style={{
-                  fontSize: "11px",
-                  fontWeight: 700,
-                  letterSpacing: "0.2em",
-                  color: link === "HOME" ? "#22d3ee" : "rgba(255,255,255,0.65)",
-                  textDecoration: "none",
-                  whiteSpace: "nowrap",
-                  paddingBottom: "6px",
-                  position: "relative",
-                  transition: "color 0.2s",
-                }}
-              >
-                {link}
-                {link === "HOME" && (
+            {navLinks.map((link) => {
+              const isHovered = hoveredLink === link;
+
+              return (
+                <a
+                  key={link}
+                  href="#"
+                  onClick={(e) => handleFooterLinkClick(e, link)}
+                  onMouseEnter={() => setHoveredLink(link)}
+                  onMouseLeave={() => setHoveredLink(null)}
+                  style={{
+                    fontSize: "11px",
+                    fontWeight: 700,
+                    letterSpacing: "0.2em",
+                    color: isHovered ? "#22d3ee" : "rgba(255,255,255,0.8)",
+                    textDecoration: "none",
+                    whiteSpace: "nowrap",
+                    paddingBottom: "6px",
+                    position: "relative",
+                    transition: "color 0.2s",
+                  }}
+                >
+                  {link}
                   <span
                     style={{
                       position: "absolute",
                       bottom: 0,
                       left: 0,
-                      width: "100%",
+                      width: isHovered ? "100%" : "0",
                       height: "2px",
                       background: "#22d3ee",
-                      boxShadow: "0 0 8px rgba(34,211,238,0.9)",
+                      boxShadow: isHovered ? "0 0 8px rgba(34,211,238,0.9)" : "none",
+                      transition: "width 0.3s ease",
                     }}
                   />
-                )}
-              </a>
-            ))}
+                </a>
+              );
+            })}
           </nav>
         </div>
 
