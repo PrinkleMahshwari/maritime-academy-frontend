@@ -9,7 +9,12 @@
   --color-lightBlue: #E8F0FE;  /* Section backgrounds */
   --color-darkGray: #333333;   /* Secondary text */
 
---font-serif: "Playfair Display", serif;
+  --font-serif: "Playfair Display", serif;
   --font-sans: "Inter", sans-serif;
   --font-cursive: "Monsieur La Doulaise", cursive;
+}
+
+html,
+body {
+  overflow-x: hidden;
 }
