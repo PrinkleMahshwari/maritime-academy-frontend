@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import YachtLogo from '../../assets/logo.svg';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -26,21 +27,18 @@ const Navbar = () => {
     { name: 'HOME', path: '/' },
     { name: 'TRAINING', sectionId: 'training-section' },
     { name: 'TRIP', sectionId: 'trips-section' },
-    { name: 'LOCATION', sectionId: 'locations-section' }, // 👈 Yeh dynamic section ko connect karega
+    { name: 'LOCATION', sectionId: 'locations-section' },
     { name: 'CONTACT US', sectionId: 'contact-section' }
   ];
 
-  // 🔄 Handles dynamic routing and section scrolling smoothly
   const handleNavigation = (link) => {
     if (link.name === 'HOME') {
       navigate('/');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      // Agar user pehle se homepage par nahi hai, toh pehle navigate karein fir scroll
       if (location.pathname !== '/') {
         navigate('/', { state: { scrollToSection: link.sectionId } });
       } else {
-        // Agar pehle se home par hain, toh direct smoothly target section par scroll karein
         const element = document.getElementById(link.sectionId);
         if (element) {
           element.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -49,7 +47,6 @@ const Navbar = () => {
     }
   };
 
-  // 🔔 Listen to section scrolls if user redirects from another page (like /login)
   useEffect(() => {
     if (location.pathname === '/' && location.state?.scrollToSection) {
       const sectionId = location.state.scrollToSection;
@@ -59,7 +56,6 @@ const Navbar = () => {
           element.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       }, 100);
-      // State ko clear kar dein taake reload par bar bar auto-scroll na ho
       window.history.replaceState({}, document.title);
     }
   }, [location]);
@@ -70,26 +66,24 @@ const Navbar = () => {
     }`}>
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         
-        {/* LEFT: Yacht Logo Custom Design */}
+        {/* LEFT: Yacht Logo with Vertical Layout */}
         <div 
           onClick={() => { navigate('/'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-          className="flex flex-col items-start select-none cursor-pointer group"
+          className="flex flex-col items-center select-none cursor-pointer group"
         >
-          <div className="flex items-center gap-1">
-            <span className="text-2xl filter drop-shadow-[0_0_8px_rgba(34,211,238,0.6)] group-hover:scale-110 transition-transform duration-300">🛥️</span>
-            <span className="text-white font-heading font-black tracking-widest text-lg uppercase">
-              YACHT
-            </span>
-          </div>
-          <span className="text-[7px] text-cyan-400 font-bold tracking-[0.4em] uppercase -mt-1 pl-7 opacity-80">
-            Academy
+          <img 
+            src={YachtLogo} 
+            alt="Yacht Logo" 
+            className="h-8 w-auto filter drop-shadow-[0_0_8px_rgba(34,211,238,0.6)] group-hover:scale-110 transition-transform duration-300"
+          />
+          <span className="text-white font-heading font-black tracking-widest text-sm uppercase mt-1">
+            Yacht
           </span>
         </div>
 
-        {/* CENTER/RIGHT: Modern Minimalist Links */}
+        {/* CENTER/RIGHT: Navigation Links */}
         <div className="hidden md:flex items-center gap-10">
           {navLinks.map((link, index) => {
-            // Check checking dynamic highlighting active link
             const isHomeActive = link.name === 'HOME' && location.pathname === '/' && !window.scrollY;
             
             return (
@@ -99,7 +93,6 @@ const Navbar = () => {
                 className="relative font-heading text-xs font-semibold tracking-[0.2em] text-white/80 hover:text-cyan-400 transition-colors duration-300 uppercase pb-1 group bg-transparent border-none cursor-pointer"
               >
                 {link.name}
-                {/* Custom active/hover neon border effect below text */}
                 <span className={`absolute bottom-0 left-0 w-0 h-[1.5px] bg-cyan-400 shadow-[0_0_8px_#06b6d4] transition-all duration-300 group-hover:w-full ${
                   isHomeActive ? 'w-full' : ''
                 }`}></span>
@@ -108,7 +101,7 @@ const Navbar = () => {
           })}
         </div>
 
-        {/* Mobile Menu Icon Placeholder */}
+        {/* Mobile Menu Icon */}
         <div className="md:hidden text-white text-xl cursor-pointer hover:text-cyan-400 transition-colors">
           ☰
         </div>
